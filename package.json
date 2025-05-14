@@ -1,0 +1,14 @@
+{
+  "name": "node_js_tasks",
+  "version": "1.0.0",
+  "description": "Task implementation for Node.js course",
+  "main": "index.js",
+  "scripts": {
+    "bonus_task01": "node bonusBlock/taks01.js",
+    "bonus_task02": "node bonusBlock/taks02.js",
+    "bonus_task03": "node bonusBlock/taks03.js",
+    "bonus_task04": "node bonusBlock/taks04.js"
+  },
+  "author": "Oleksii Pletenetskyi",
+  "license": "ISC"
+}
