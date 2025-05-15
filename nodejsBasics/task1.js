@@ -9,16 +9,10 @@ const recursiveSum = (arg) => {
         array = arg;
     }
     return array.reduce((prev, current) => {
-        let prevValue;
         if (Array.isArray(prev)) {
-            prevValue = recursiveSum(prev);
+            return recursiveSum(prev) + (Array.isArray(current) ? recursiveSum(current) : current);
         } else {
-            prevValue = prev;
-        }
-        if (Array.isArray(current)) {
-            return prevValue + recursiveSum(current);
-        } else {
-            return prevValue + current;
+            return prev + (Array.isArray(current) ? recursiveSum(current) : current);
         }
     });
 }
