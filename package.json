@@ -8,7 +8,9 @@
     "bonus_task02": "node bonusBlock/taks02.js",
     "bonus_task03": "node bonusBlock/taks03.js",
     "bonus_task04": "node bonusBlock/taks04.js",
-    "bonus_task1": "node nodejsBasics/task1.js \"[[2, 7], 1, 2, [3, 4, [5]], 6]\""
+    "task1": "node nodejsBasics/task1.js \"[[2, 7], 1, 2, [3, 4, [5]], 6]\"",
+    "task2": "cd ./nodejsArchitecture && npm start && cd ..",
+    "task22": "node ./nodejsArchitecture/index.js"
   },
   "author": "Oleksii Pletenetskyi",
   "license": "ISC"
