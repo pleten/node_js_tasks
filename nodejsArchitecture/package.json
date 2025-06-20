@@ -4,13 +4,25 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon index.js"
+    "add": "node index.js add",
+    "list": "node index.js list",
+    "done": "node index.js done",
+    "history": "node index.js history",
+    "stats": "node index.js stats",
+    "delete": "node index.js delete",
+    "update": "node index.js update",
+    "test:migration": "node ./testData/fillTestData.js",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "eslint": "^9.29.0",
+    "globals": "^16.2.0",
     "nodemon": "^3.1.10"
   }
 }

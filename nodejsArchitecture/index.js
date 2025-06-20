@@ -1,11 +1,7 @@
-import http from 'http';
-import router from './src/controllers/index.js';
+import { parseArgs } from './src/helpers/parseArgs.js';
+import Controller from './src/controllers/controller.js';
 
-const server = http.createServer((req, res) => {
-    router.handle(req, res);
-});
+const controller = new Controller();
+const data = parseArgs(process.argv);
 
-const PORT = 3000;
-server.listen(PORT, () => {
-    console.log(`Listening on http://localhost:${PORT}`);
-});
+(async () => await controller.handle(data))();
