@@ -51,7 +51,7 @@ class HabitModel {
     async delete(id) {
         const habits = await this.#read();
         const newHabits = habits.filter(item => item.id !== id);
-        return  this.#save(newHabits)
+        return this.#save(newHabits)
             .then(() => true)
             .catch(() => false);
     }
@@ -63,7 +63,9 @@ class HabitModel {
             const habitIndex = habits.indexOf(habitToUpdate);
             habits[habitIndex].name = name || habits[habitIndex].name;
             habits[habitIndex].freq = freq || habits[habitIndex].freq;
-            return true;
+            return this.#save(habitToUpdate)
+                .then(() => true)
+                .catch(() => false);
         } else {
             return false;
         }
