@@ -1,0 +1,15 @@
+# Builder
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY ./keyValue/package.json ./
+RUN npm install
+
+COPY ./keyValue/src ./src
+COPY ./keyValue/eslint.config.js ./
+RUN npm run lint
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]

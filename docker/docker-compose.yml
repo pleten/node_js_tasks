@@ -1,0 +1,21 @@
+services:
+  redis-like:
+    build:
+      dockerfile: ./Dockerfile.redis
+    expose: ["4000"]
+    networks: [ internal ]
+
+  key-value:
+    build:
+      dockerfile: ./Dockerfile.kv.dev
+    volumes:
+      - ./keyValue/src:/app/src
+    ports: [ "8080:3000" ]
+    restart: always
+    environment:
+      REDIS_URL: http://redis-like:4000
+    depends_on: [ redis-like ]
+    networks: [ internal ]
+
+networks:
+  internal:
