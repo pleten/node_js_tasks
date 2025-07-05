@@ -16,5 +16,8 @@
     "eslint": "^9.29.0",
     "globals": "^16.2.0",
     "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.3.4"
   }
 }

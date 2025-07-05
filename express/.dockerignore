@@ -1,0 +1,10 @@
+# ніколи не копіюємо node_modules у build-context
+**/node_modules
+
+# артефакти фронтенда та бекенда
+dist
+build
+
+# інше зайве
+.git
+*.log
