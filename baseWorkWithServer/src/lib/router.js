@@ -4,32 +4,46 @@ const fs = require('fs');
 
 class Router {
 
+    #pathToRoute(path) {
+        return join(__dirname, '../routes', path, 'route.js');
+    };
     handler(req, resp) {
         const path = req.url.includes('?') ? req.url.split('?')[0] : req.url;
-        const params = path.match(/\d+/g) || [];
-        let routerPath;
-        if(params.length > 0) {
-            const pathWithDynamicSegments = path.replaceAll(/\d+/g, '_dynamic_');
-            const staticSegments = pathWithDynamicSegments.split('_dynamic_');
-            let calculatedPath = '';
-            for(let i = 0; i< staticSegments.length; i+=1) {
-                calculatedPath += staticSegments[i];
-                const files = fs.readdirSync(join(__dirname, '../routes', calculatedPath));
-                calculatedPath += files.filter(file => file.match(/\[[a-zA=Z]*]/g))[0] || '';
+        const params = {};
+        let route = null;
+
+        try {
+            route = require(this.#pathToRoute(path));
+        }
+        catch  {
+            const segments = path.split('/').filter(segment => segment !== '');
+            for(let i = 0; i < segments.length; i += 1) {
+                const currentPath = segments.slice(0, i+1).join('/');
+                if(!fs.existsSync(join(__dirname, '../routes', currentPath))) {
+                    const files = fs.readdirSync(join(__dirname, '../routes', segments.slice(0, i).join('/')));
+                    const dynamicSegment = files.find(file => file.match(/\[[a-zA-Z]*]/g));
+                    if(!dynamicSegment) {
+                        json(resp, 404,{ error: 'Not Found' });
+                        return;
+                    }
+                    params[dynamicSegment.replaceAll(/[[\]]/g, '')] = segments[i];
+                    segments[i] = dynamicSegment;
+                }
+
             }
-
-            routerPath= join(__dirname, '../routes', calculatedPath, 'route.js');
-
-        } else {
-            routerPath = join(__dirname, '../routes', path, 'route.js');
+            try {
+                const newPath = this.#pathToRoute(segments.join('/'));
+                route = require(newPath);
+            }
+            catch {
+                return json(resp, 404,{ error: 'Not Found' });
+            }
         }
 
-        const route = require(routerPath);
-
-        if (route?.handler) {
+        if(route?.handler) {
             route.handler(req, resp, params);
         } else {
-            json(resp, 404,{ error: 'Not Found' });
+            return json(resp, 404,{ error: 'Not Found' });
         }
     }
 }

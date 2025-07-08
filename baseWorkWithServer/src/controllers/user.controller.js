@@ -9,7 +9,7 @@ class UserController {
     }
 
     async getById(req, res, params) {
-        const user = await this.#userService.getById(params[0]);
+        const user = await this.#userService.getById(params.id);
         if(user.length > 0) {
             return json(res, 200, user);
         } else {
@@ -23,12 +23,12 @@ class UserController {
     }
 
     async delete(req, res, params) {
-        const deleteResponse = await this.#userService.delete(params[0]);
+        const deleteResponse = await this.#userService.delete(params.id);
         return json(res, statusByCode[deleteResponse.code], { ...deleteResponse });
     }
 
     async update(req, res, params) {
-        const updateResponse = await this.#userService.update(params[0], await bodyJSON(req));
+        const updateResponse = await this.#userService.update(params.id, await bodyJSON(req));
         return json(res, statusByCode[updateResponse.code], { ...updateResponse });
 
     }
