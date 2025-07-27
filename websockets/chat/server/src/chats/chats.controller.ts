@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, ForbiddenException, Get, Headers, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, Patch, Post } from '@nestjs/common';
 import {ChatDTO} from "../dto";
 import Redis from "ioredis";
 import {Store} from "../store/store";
+import {v4 as uuidv4} from 'uuid';
 
 @Controller('/api/chats')
 export class ChatsController {
@@ -15,12 +16,32 @@ export class ChatsController {
     @Headers('X-User') creator: string,
     @Body() body: { name?: string; members: string[] },
   ): Promise<ChatDTO> {
-    throw new ForbiddenException('Not implemented yet');
+
+    const response = await this.store.createChat({
+      id: uuidv4(),
+      name: body.name || body.members.join(', '),
+      members: [creator, ...body.members],
+      updatedAt: new Date().toISOString()
+    });
+    this.redis.publish('chat-events', JSON.stringify({
+      ev: 'chatCreated',
+      data: response,
+      chanels: response.members,
+      meta: { local: false },
+      src: ''
+    }));
+
+    return response;
   }
 
   @Get()
-  list(@Headers('X-User') user: string) {
-    throw new ForbiddenException('Not implemented yet');
+  async list(@Headers('X-User') user: string): Promise<{ items: ChatDTO[]; total: number }> {
+    const chats = await this.store.getChatList(user);
+
+    return {
+        items: chats,
+        total: chats.length,
+    }
   }
 
   @Patch(':id/members')
@@ -29,11 +50,24 @@ export class ChatsController {
     @Param('id') id: string,
     @Body() dto: { add?: string[]; remove?: string[] },
   ) {
-    throw new ForbiddenException('Not implemented yet');
+    const chat = await this.store.getChatData(id);
+    const response = await this.store.updateChatMembers(id, actor, dto);
+    this.redis.publish('chat-events', JSON.stringify({
+      ev: 'membersUpdated',
+      data: {
+        chatId: response.id,
+        members: response.members,
+      },
+      chanels: chat?.members,
+      meta: { local: false },
+      src: ''
+    }));
+
+    return response;
   }
 
   @Delete(':id')
   delete(@Headers('X-User') admin: string, @Param('id') id: string) {
-    throw new ForbiddenException('Not implemented yet');
+    return this.store.deleteChat(id, admin)
   }
 }

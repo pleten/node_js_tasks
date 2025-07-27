@@ -136,7 +136,7 @@ export const ChatLayout = ({userName}: { userName: string }) => {
       setCurrent(chat);
       svc.joinChat(chat.id);
       const list = await svc.listMessages(chat.id);
-      setMessages(list.reverse());
+      setMessages(list);
     };
 
     function leaveCurrentChat() {

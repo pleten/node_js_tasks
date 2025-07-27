@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Headers, Param, Post, Query, ForbiddenException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {MessageDTO} from "../dto";
 import {Store} from "../store/store";
 
@@ -7,13 +15,17 @@ export class MessagesController {
   constructor(private store: Store) {}
 
   @Get()
-  list(
+  async list(
     @Headers('X-User') user: string,
     @Param('id') chatId: string,
     @Query('cursor') cursor?: string,
     @Query('limit') limit = '30',
   ) {
-    throw new ForbiddenException('Not implemented yet');
+    const options = {limit: +limit, cursor: cursor ? +cursor : undefined};
+    const messages = await this.store.getChatHistory(chatId, options);
+    return {
+        items: messages,
+    }
   }
 
   @Post()
@@ -21,7 +33,7 @@ export class MessagesController {
     @Headers('X-User') author: string,
     @Param('id') chatId: string,
     @Body('text') text: string,
-  ): MessageDTO {
-    throw new ForbiddenException('Not implemented yet');
+  ): Promise<MessageDTO> {
+    return this.store.sendMessageToChat({chatId, author, text});
   }
 }
