@@ -1,0 +1,22 @@
+{
+  "name": "db_naive_orm",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "author": "Oleksii Pletenetskyi",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "pg": "^8.16.3",
+    "sql-template-strings": "^2.2.2",
+    "sql-template-tag": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.10",
+    "@types/pg": "^8.15.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}

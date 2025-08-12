@@ -28,4 +28,4 @@ COPY --from=builder /app/package.json ./
 EXPOSE 3000
 
 ENTRYPOINT ["/sbin/tini","--"]
-CMD ["node","src/index.js"]
+CMD ["node","src/index.ts"]
